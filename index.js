@@ -1,10 +1,8 @@
 // external library-s
 const express = require('express');
-const https = require('https');
 const cors = require('cors');
 const app = express();
 const fs = require('fs');
-const { dirname } = require('path');
 
 // express use cases
 app.use(express.json());
@@ -13,11 +11,11 @@ app.use(cors())
 
 const port = 3010
 
-// list typing { id: 0, name: "book-1", extra_value: "aaaah"}
+// list typing { id: 0, name: "book-1", extra_value: "aaaah"} no database for now
 var templateList = [
-    { id: 1, name: "book-1", extra_value: "aaaah"},
-    { id: 2, name: "book-2", extra_value: "aqwrqrtw"},
-    { id: 3, name: "book-3", extra_value: "shitmonkey"}
+    { id: 1, name: "book-1", extraText: "aaaah"},
+    { id: 2, name: "book-2", extraText: "aqwrqrtw"},
+    { id: 3, name: "book-3", extraText: "shitmonkey"}
 ]
 
 // credentials for logging in
@@ -56,6 +54,49 @@ app.get('/templateList/:id', (req, res) => {
     res.send(templateList[req.params.id])
 });
 
+// get the http post request for a new list
+app.post('/templateList/addList', (req, res) => {
+    console.log("New list data:");
+    console.log(req.body)
+    
+    templateList.push(req.body)
+    
+    res.sendStatus(200)
+});
+
+// a function for reorganizing the id-s of the lists in the templateLists array
+function reorganizeTemplateLists() {
+    // gets each element and the list index
+    templateList.forEach((element, index) => {
+        element.id = index+1 // add one to the index
+    })
+    // no the index isn't the id
+}
+
+// for deleting a list via delete request
+app.delete('/templateList/deleteList', (req, res) => {
+    console.log("Deletion of list:")
+    console.log(templateList[req.body.id-1]);
+    
+    templateList.splice(req.body.id-1,1) // splice or pretty much delete from start to an end point or just once
+
+    reorganizeTemplateLists()
+
+    res.sendStatus(200)
+});
+
+// patch request for updating a single list
+app.patch('/templateList/updateList', (req, res) => {
+    console.log("Update of list:");
+    console.log(req.body)
+
+    // change list to new list
+    templateList[req.body.id-1] = req.body
+
+    res.sendStatus(200)
+});
+
+// server
 server = app.listen(port, () => {
     console.log(`API up at: https://localhost:${port}`);
 });
@@ -63,6 +104,7 @@ server = app.listen(port, () => {
 // websocket part
 const io = require("socket.io")(server, {cors: {origin: "*"}})
 
+// on socket connection
 io.on('connection', socket => {
     console.log("A new socket client has conneted")
-})
+});

@@ -6,7 +6,7 @@ body {
 
 .auto-grid-3 {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     padding: 1em;
 }
 
@@ -23,4 +23,19 @@ body {
 
 .adminButtons button:hover {
     border-bottom: 2px solid black;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group .form-control {
+    width: 95%;
+    margin-bottom: 1.5em;
+}
+
+.button-holder {
+    display: flex;
+    gap: 3%;
 }

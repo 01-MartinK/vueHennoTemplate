@@ -45,10 +45,75 @@ const vue = Vue.createApp({
             })
         },
         getListById: async function(id) { // get a single list via ID
+            
+        },
+        showDetailsOfAList: async function(event) { // show the details of a single list
+            let list_id = event.target.parentElement.id; // get current list if via parentElement.id
 
+            // set global list index to list id for deletion purposes
+            this.index = list_id
+
+            // set the values of the details modal
+            document.querySelector("#extraText").textContent = this.templateList[list_id-1].extraText // set extra text element to extra text of the list
+            document.querySelector(".detailsModal-title").textContent = this.templateList[list_id-1].name // set name element to name of the list
+        },
+        addNewList: async function(event) { // add a new list to the main api server
+            let name = document.querySelector('#newListName').value
+            let extraText = document.querySelector('#newListExtraText').value
+
+            // create the list
+            let new_list = {id: this.templateList.length+1, name: name, extraText: extraText}
+
+            const request = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(new_list)
+            }
+            
+            await fetch("http://localhost:3010/templateList/addList", request)
+        },
+        deleteList: async function(event) { // send delete request to delete a list via the global list index
+            const request = {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({id: this.index})
+            }
+
+            await fetch("http://localhost:3010/templateList/deleteList", request)
+
+            this.updateTemplateLists()
+        },
+        getUpdatingListData: async function() { // update edit modal inputs
+            let list = this.templateList[this.index-1]
+
+            document.querySelector("#updateListNameField").value = list.name
+            document.querySelector("#updateListExtraTextField").value = list.extraText
+        },
+        updateList: async function(event) { // send update request to update a certain lsit
+            let name = document.querySelector("#updateListNameField").value
+            let extraText = document.querySelector("#updateListExtraTextField").value
+
+            let updatedList = {id: this.index, name: name, extraText: extraText} // new list
+
+            const request = {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updatedList)
+            }
+
+            await fetch("http://localhost:3010/templateList/updateList", request)
+        },
+        updateTemplateLists: async function() { // for updating the list again
+            this.templateList = await (await fetch('http://localhost:3010/templateList')).json();
         },
         saveToLocalStorage: async function() { // save to local storage the templateList
             localStorage.setItem('TemplateLists', JSON.stringify(this.templateList));
         },
     }
-}).mount('#app');
+}).mount('#app'); // mounting the app

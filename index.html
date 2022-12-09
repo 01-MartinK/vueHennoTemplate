@@ -11,10 +11,10 @@
     <!-- Kõik kood mida tahad, et vue-ga töötaks peaks olema app-i sees -->
     <div id="app">
         <nav class="navbar navbar-light bg-light">
-            <span class="navbar-brand m-1 h1">Navbar</span>
+            <span class="navbar-brand m-2 h1">Template Project List</span>
             <div class="adminButtons">
-                <button>Add</button>
-                <button>Delete</button>
+                <button data-bs-toggle="modal" data-bs-target="#addNewModal" >Add</button>
+                <button>Login</button>
                 <button>Logout</button>
             </div>
         </nav>
@@ -22,10 +22,10 @@
         <!-- show the current templateList -->
          <div class="auto-grid-3">
             <div v-for="list in templateList" class="card" style="width: 18rem;">
-                   <div class="card-body">
+                   <div :id='list.id' class="card-body">
                     <h5 class="card-title">{{ list.name }}</h5>
                     <p class="card-text">{{ list.extra_value }}</p>
-                    <button type="button" class="btn btn-primary btn-lg" @click='' data-bs-toggle="modal" data-bs-target="#modelId">More Details</button>
+                    <button type="button" class="btn btn-primary btn-lg" @click="showDetailsOfAList" data-bs-toggle="modal" data-bs-target="#detailsModal">More Details</button>
                  </div>
              </div>
           </div>
@@ -35,17 +35,17 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Details of List</h5>
+                        <h5 class="modal-title detailsModal-title">Details of List</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                             </button>
                     </div>
                     <div class="modal-body">
-                        <p id="detCrimCrime"></p>
-                        <p id="detCrimDesc" ></p>
+                        <p id="extraText"></p>
                     </div>
                     <div class="modal-footer">
-                        <button>Edit List</button>
-                        <button></button>
+                        <button type="button" class="btn btn-danger" @click="deleteList" data-bs-dismiss="modal">Delete</button>
+                        <button type="button" class="btn btn-primary" @click="getUpdatingListData" data-bs-toggle="modal" data-bs-target="#updateListModal">Edit List</button>
+                        <button type="button" class="btn btn-info" >List Place</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -53,7 +53,46 @@
         </div>
 
         <!-- adding a new list modal -->
-
+        <div class="modal fade" id="addNewModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form class="input-group m-2">
+                            <h5 class="mb-3">Add new list</h5>
+                            <label>Name</label>
+                            <input id="newListName" class="form-control" type="text" placeholder="enter list name here" />
+                            <label>Extra Text</label>
+                            <input id="newListExtraText" class="form-control" type="text" placeholder="enter list extra here" />
+                            <div class="button-holder">
+                                <button class="btn btn-primary" @click="addNewList" data-bs-dismiss="modal">Add</button>
+                                <button class="btn btn-danger" data-bs-dismiss="modal" >Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- updating a list modal -->
+        <div class="modal fade" id="updateListModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form class="input-group m-2">
+                            <h5 class="mb-3">Update List Data</h5>
+                            <label>Name</label>
+                            <input id="updateListNameField" class="form-control" type="text" placeholder="insert here" />
+                            <label>Extra Text</label>
+                            <input id="updateListExtraTextField" class="form-control" type="text" placeholder="insert here" />
+                            <div class="button-holder">
+                                <button class="btn btn-primary" @click="updateList" data-bs-dismiss="modal">Confirm</button>
+                                <button class="btn btn-danger" data-bs-dismiss="modal" >Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 </body>
