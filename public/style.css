@@ -35,6 +35,10 @@ body {
     margin-bottom: 1.5em;
 }
 
+.input-group label {
+    margin-bottom: 0.3em;
+}
+
 .button-holder {
     display: flex;
     gap: 3%;

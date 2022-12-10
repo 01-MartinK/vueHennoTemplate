@@ -6,11 +6,16 @@ See on põhimõtteliselt websocket, kuid mugavam ja sisaldab rohkem funktsioone 
 
 Expressiga kasutame json-it ja static kausta nimega public. Public-usse pane kõik mida tahad et indeks.html kätte saaks nagu app.js ja style.css ka piltid kui vaja.
 
+Sessionideks kasutab see express-sessions süsteemi. Kus antakse alguses sessioon ja läbi küpsiste kontrollitakse asju. Sessiooni sees
+on userid mille läbi saab näha kas tal on userid. läbi selle juhendi saab lisada [https://www.section.io/engineering-education/session-management-in-nodejs-using-expressjs-and-express-session/] kuid siia on juba lisatud.
+
 Funktsionaalsus[]:
     1. Andmete kättesaamine
     2. Andmete lisamine
     3. Andmete kustutamine
     4. Andmete muudmine
+    5. Sisse logimine / välja logimine
+    6. Läbi sessioonide
 ____________________________
 
 Projekti Struktuur[]:

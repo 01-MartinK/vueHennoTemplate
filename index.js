@@ -3,13 +3,29 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const fs = require('fs');
+const cookieParser = require("cookie-parser");
+const sessions = require('express-session');
 
 // express use cases
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
+app.use(cookieParser());
 app.use(cors())
 
 const port = 3010
+
+// sessions
+// creating 24 hours from milliseconds
+const oneDay = 1000 * 60 * 60 * 24;
+app.use(sessions({
+    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+    saveUninitialized:true,
+    cookie: { maxAge: oneDay , isAdmin: false},
+    resave: false 
+}));
+
+var session;
 
 // list typing { id: 0, name: "book-1", extra_value: "aaaah"} no database for now
 var templateList = [
@@ -21,8 +37,8 @@ var templateList = [
 // credentials for logging in
 const credentials = [
     {id: 1, username: "Admin", email: "admin@usage.com", password: "qwerty", isAdmin: true, ip: ""},
-    {id: 2, username: "Kevin", email: "kevin@usage.com", password: "kevin", isAdmin: false, ip: ""},
-    {id: 3, username: "Andres", email: "andres@usage.com", password: "andres", isAdmin: false, ip: ""}
+    {id: 2, username: "Kevin", email: "kevin@usage.com", password: "kevin", isAdmin: true, ip: ""},
+    {id: 3, username: "Andres", email: "andres@usage.com", password: "andres", isAdmin: true, ip: ""}
 ]
 
 // for testing server lag
@@ -34,6 +50,7 @@ function sleep(ms) {
 
 // for rendering the page
 app.get('/', (req, res) => {
+
     fs.readFile('./index.html', function (err, html) {
         if (err) {
             throw err;
@@ -43,6 +60,34 @@ app.get('/', (req, res) => {
     });
 
 })
+
+app.get('/loginTest', (req, res) => {
+    session=req.session
+    if(session.userid) {
+        res.send(credentials.find((element) => element.username === session.userid).isAdmin)
+    }
+})
+
+// post a user to check if it exists and if it should be logged in
+app.post('/user', (req, res) => {
+    let user = credentials.find((element) => element.username === req.body.username) // get the user with the username if there isn't one then it returns an undefined
+    if (user) { // check if user is undefined || if it is undefined that means it doesn't exist
+        if (req.body.password == user.password) {
+            session=req.session; // set session
+            session.userid=req.body.username // give the session a userid in this case the username
+            //console.log(req.session)
+            res.send(user.isAdmin) // OK status code
+        } 
+    }else {
+        res.sendStatus(401) // not authenticated statusCode
+    }
+})
+
+// logout request
+app.get('/logout',(req,res) => {
+    req.session.destroy();
+    res.sendStatus(200)
+});
 
 // send the template list
 app.get('/templateList', (req, res) => {
@@ -106,5 +151,5 @@ const io = require("socket.io")(server, {cors: {origin: "*"}})
 
 // on socket connection
 io.on('connection', socket => {
-    console.log("A new socket client has conneted")
+    //console.log("A new socket client has conneted")
 });

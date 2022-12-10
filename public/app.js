@@ -17,6 +17,8 @@ const vue = Vue.createApp({
             console.log("connected to server")
         });
 
+        this.loginTest() // check if already logged in
+
         // on created get the list right away
         try {
             this.templateList = await (await fetch('http://localhost:3010/templateList')).json();
@@ -85,6 +87,7 @@ const vue = Vue.createApp({
 
             await fetch("http://localhost:3010/templateList/deleteList", request)
 
+            // re update the list
             this.updateTemplateLists()
         },
         getUpdatingListData: async function() { // update edit modal inputs
@@ -111,6 +114,41 @@ const vue = Vue.createApp({
         },
         updateTemplateLists: async function() { // for updating the list again
             this.templateList = await (await fetch('http://localhost:3010/templateList')).json();
+        },
+        loginTest: async function() { // check if already is logged in via session cookie
+            await fetch('http://localhost:3010/loginTest')
+            .then(response => response.json())
+            .then(data => {
+                this.admin = data
+            })
+        },
+        login: async function(event) { // request a login and login
+            event.preventDefault() // stop from refreshing due to being in a form
+            // get username and password
+            let username = document.querySelector('#loginUsernameField').value
+            let password = document.querySelector('#loginPasswordField').value
+
+            const request = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({username: username, password: password})
+            }
+
+            await fetch("http://localhost:3010/user", request)
+            .then(response => response.json())
+            .then(data => { // in this case the data is only the is_admin a true or false value
+                this.admin = data; 
+                $('#loginModal').modal('hide'); // hide the modal
+            })
+            .catch(() => {
+                console.log("error")
+            })
+        },
+        logout: async function() { // request logout
+            await fetch('http://localhost:3010/logout')
+            this.admin = false
         },
         saveToLocalStorage: async function() { // save to local storage the templateList
             localStorage.setItem('TemplateLists', JSON.stringify(this.templateList));

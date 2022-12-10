@@ -13,9 +13,9 @@
         <nav class="navbar navbar-light bg-light">
             <span class="navbar-brand m-2 h1">Template Project List</span>
             <div class="adminButtons">
-                <button data-bs-toggle="modal" data-bs-target="#addNewModal" >Add</button>
-                <button>Login</button>
-                <button>Logout</button>
+                <button v-if="admin" data-bs-toggle="modal" data-bs-target="#addNewModal" >Add</button>
+                <button v-else="admin" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+                <button v-if="admin" @click="logout">Logout</button>
             </div>
         </nav>
         
@@ -43,9 +43,9 @@
                         <p id="extraText"></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" @click="deleteList" data-bs-dismiss="modal">Delete</button>
-                        <button type="button" class="btn btn-primary" @click="getUpdatingListData" data-bs-toggle="modal" data-bs-target="#updateListModal">Edit List</button>
-                        <button type="button" class="btn btn-info" >List Place</button>
+                        <button v-if="admin" type="button" class="btn btn-danger" @click="deleteList" data-bs-dismiss="modal">Delete</button>
+                        <button v-if="admin" type="button" class="btn btn-primary" @click="getUpdatingListData" data-bs-toggle="modal" data-bs-target="#updateListModal">Edit List</button>
+                        <button v-if="admin" type="button" class="btn btn-info" >List Place</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -87,6 +87,27 @@
                             <div class="button-holder">
                                 <button class="btn btn-primary" @click="updateList" data-bs-dismiss="modal">Confirm</button>
                                 <button class="btn btn-danger" data-bs-dismiss="modal" >Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login modal -->
+        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form class="input-group m-2">
+                            <h5 class="mb-3" style="text-align: center;">Login to account</h5>
+                            <label>Username:</label>
+                            <input id="loginUsernameField" class="form-control" type="text" placeholder="enter username here" />
+                            <label>Password:</label>
+                            <input id="loginPasswordField" class="form-control" type="text" placeholder="enter password here" />
+                            <div class="button-holder">
+                                <button class="btn btn-primary" @click="login">Login</button>
+                                <button class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
                             </div>
                         </form>
                     </div>
