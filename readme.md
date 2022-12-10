@@ -34,3 +34,5 @@ Materjal[]:
     vue süntaks tähtis [https://vuejs.org/guide/essentials/template-syntax.html#attribute-bindings]
 
     kuna henno vingub requestide tüüpide kohta siis see ka [https://www.geeksforgeeks.org/different-kinds-of-http-requests/]
+
+    Siin js ja html parenting või struktuuris laste kätte saamine [https://www.javascripttutorial.net/javascript-dom/javascript-get-child-element/]

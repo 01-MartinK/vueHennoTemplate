@@ -34,6 +34,11 @@ var templateList = [
     { id: 3, name: "book-3", extraText: "shitmonkey"}
 ]
 
+// for the websocket part
+var listPositions = [
+    {pos: 5, id: '1'}
+]
+
 // credentials for logging in
 const credentials = [
     {id: 1, username: "Admin", email: "admin@usage.com", password: "qwerty", isAdmin: true, ip: ""},
@@ -109,6 +114,10 @@ app.post('/templateList/addList', (req, res) => {
     res.sendStatus(200)
 });
 
+app.post('/positionList/change', (req, res) => {
+    console.log(req.body)
+});
+
 // a function for reorganizing the id-s of the lists in the templateLists array
 function reorganizeTemplateLists() {
     // gets each element and the list index
@@ -152,4 +161,16 @@ const io = require("socket.io")(server, {cors: {origin: "*"}})
 // on socket connection
 io.on('connection', socket => {
     //console.log("A new socket client has conneted")
+    io.emit('update_cells', listPositions)
+    
+    socket.on("cell_changed", cell => { // when cell changed
+        //console.log(cell)
+
+        if (!listPositions.find(element => element.id === cell.id))
+            listPositions.push(cell);
+        else
+            listPositions.find(element => element.id === cell.id).pos = cell.pos;
+
+        io.emit('update_cells', listPositions)
+    })
 });

@@ -45,7 +45,7 @@
                     <div class="modal-footer">
                         <button v-if="admin" type="button" class="btn btn-danger" @click="deleteList" data-bs-dismiss="modal">Delete</button>
                         <button v-if="admin" type="button" class="btn btn-primary" @click="getUpdatingListData" data-bs-toggle="modal" data-bs-target="#updateListModal">Edit List</button>
-                        <button v-if="admin" type="button" class="btn btn-info" >List Place</button>
+                        <button v-if="admin" type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#storageModal">List Place</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -89,6 +89,22 @@
                                 <button class="btn btn-danger" data-bs-dismiss="modal" >Cancel</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- listStorageSystem for websocket -->
+        <div class="modal fade" id="storageModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="gridHolder">
+                            <div v-for="i in 35" id="#cellPositionGroup">
+                                <button @click="setListPosition(i)" >b-{{i}}</button>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" style="margin: 0 40%;" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>

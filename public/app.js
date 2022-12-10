@@ -4,6 +4,7 @@ const vue = Vue.createApp({
     data() { // Data or variables in a vue app
         return {
             templateList: [],
+            listPositions: [],
             index: 0,
             admin: false,
             socket: null,
@@ -15,6 +16,13 @@ const vue = Vue.createApp({
         
         this.socket.on('connect', () => { // on socket connect
             console.log("connected to server")
+        });
+
+        // update cell data
+        this.socket.on('update_cells', (cellData) => {
+            this.listPositions = cellData;
+            this.updateCells()
+            //console.log(cellData);
         });
 
         this.loginTest() // check if already logged in
@@ -114,6 +122,22 @@ const vue = Vue.createApp({
         },
         updateTemplateLists: async function() { // for updating the list again
             this.templateList = await (await fetch('http://localhost:3010/templateList')).json();
+        },
+        setListPosition: async function(pos) { // set cell position
+            let cel = {pos: pos-1, id: this.index}
+            this.socket.emit("cell_changed", cel)
+        },
+        updateCells: async function() { // update the whole cells list
+            const group = document.querySelector('.gridHolder')
+            const arr = Array.from(group.children);
+
+            // find index where a cell may reside
+            arr.forEach((element, index) => {
+                if (this.listPositions.find(list => index == list.pos))
+                    element.firstChild.classList.add("selectedHolder");
+                else
+                    element.firstChild.classList.remove("selectedHolder");
+            })
         },
         loginTest: async function() { // check if already is logged in via session cookie
             await fetch('http://localhost:3010/loginTest')

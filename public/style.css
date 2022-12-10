@@ -43,3 +43,25 @@ body {
     display: flex;
     gap: 3%;
 }
+
+.gridHolder {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 1em;
+    gap: 0.5em;
+}
+
+.gridHolder button {
+    width: 3em;
+    height: 5em;
+    text-align: center;
+    border: 1px solid gainsboro;
+    border-radius: 2px;
+    box-shadow: 1px 1px 2px gray;
+    font-size: small;
+}
+
+.gridHolder .selectedHolder {
+    border: none;
+    background-color: sienna;
+}
