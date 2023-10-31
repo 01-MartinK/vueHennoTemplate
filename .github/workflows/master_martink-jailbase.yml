@@ -58,5 +58,5 @@ jobs:
         with:
           app-name: 'martinK-jailbase'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2F7ABC386684498DAF4D5DA0856BF782 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_881FB2D969454C7EB676E2EC611B3960 }}
           package: .
